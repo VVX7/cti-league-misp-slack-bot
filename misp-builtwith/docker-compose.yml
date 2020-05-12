@@ -1,0 +1,35 @@
+# docker-compose.yml
+version: '2'
+
+services:
+  web:
+    build:
+      # Build container from Dockerfile.
+      context: ./
+      dockerfile: Dockerfile
+    # Flask service port
+    # This port should not conflict with other Slack bots (misp-twitter, etc.)
+    ports:
+      - "5001:5000"
+    # Security Hardening
+    cap_drop:
+      - ALL
+    privileged: false
+    read_only: true
+    # gunicorn requires /tmp write permission.
+    tmpfs:
+      - /tmp
+    # Environment Vars for app secrets.
+    environment:
+      REDISTOGO_URL: redis://redis:6379
+      SECRET_KEY: ${SECRET_KEY}
+      # MISP
+      MISP_URL: ${MISP_URL}
+      MISP_SECRET: ${MISP_SECRET}
+      # Slack
+      SLACK_API_TOKEN: ${SLACK_API_TOKEN}
+      SLACK_SIGNING_SECRET: ${SLACK_SIGNING_SECRET}
+
+  # Redis is used for task queue.
+  redis:
+    image: redis

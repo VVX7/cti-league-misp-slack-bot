@@ -1,0 +1,38 @@
+# docker-compose.yml
+version: '2'
+
+services:
+  web:
+    build:
+      # build from Dockerfile
+      context: ./
+      dockerfile: Dockerfile
+    # Flask service port
+    ports:
+      - "5000:5000"
+    # Security Hardening
+    cap_drop:
+      - ALL
+    privileged: false
+    read_only: true
+    # Tmp
+    tmpfs:
+      - /tmp
+    # Environment Vars
+    environment:
+      REDISTOGO_URL: redis://redis:6379
+      SECRET_KEY: ${SECRET_KEY}
+      # MISP
+      MISP_URL: ${MISP_URL}
+      MISP_SECRET: ${MISP_SECRET}
+      # Slack
+      SLACK_API_TOKEN: ${SLACK_API_TOKEN}
+      SLACK_SIGNING_SECRET: ${SLACK_SIGNING_SECRET}
+      # Twitter
+      CONSUMER_KEY: ${CONSUMER_KEY}
+      CONSUMER_SECRET: ${CONSUMER_SECRET}
+      ACCESS_TOKEN: ${ACCESS_TOKEN}
+      ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET}
+
+  redis:
+    image: redis

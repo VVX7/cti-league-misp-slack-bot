@@ -1,0 +1,13 @@
+aiohttp
+async-timeout
+Flask
+Flask-Migrate
+flask-slacksigauth
+gunicorn
+#pymisp
+redis
+requests
+rq
+slackclient
+slackeventsapi
+tweepy

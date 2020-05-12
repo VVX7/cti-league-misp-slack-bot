@@ -1,0 +1,13 @@
+aiohttp
+async-timeout
+BeautifulSoup4
+Flask
+Flask-Migrate
+flask-slacksigauth
+gunicorn
+redis
+requests
+rq
+slackclient
+slackeventsapi
+tweepy
