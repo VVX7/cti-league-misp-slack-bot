@@ -529,6 +529,7 @@ def transform_reddit_subreddit(subreddit):
     data = {}
     data['archive'] = []
     data['attachment'] = []
+    data['rules'] = []
 
     data['community-icon'] = subreddit.icon_img
     moderators = []
@@ -553,7 +554,7 @@ def transform_reddit_subreddit(subreddit):
     rules=subreddit.rules()
     data['rules'] = rules['rules']
 
-    r=requests.get(f'https://reddit.com{subreddit.url}')
+    r=requests.get(f'https://reddit.com{subreddit.url}/submit')
 
     if r.status_code == 200:
         data['submit-text'] = r.text
