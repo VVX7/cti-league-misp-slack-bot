@@ -331,8 +331,11 @@ class RedditSubReddit(AbstractMISPObjectGenerator):
 
         #rules
         if self._parameters.get('rules'):
-            self.add_attribute('rules', value=self._parameters['rules'])
-
+            if type(self._parameters.get('rules')) is list:
+                for i in self._parameters.get('rules'):
+                    self.add_attribute('rules', value=i)
+            else:
+                self.add_attribute('rules', self._parameters['rules'])
         #submit-text
         if self._parameters.get('submit-text'):
             self.add_attribute('submit-text', value=self._parameters['submit-text'])
