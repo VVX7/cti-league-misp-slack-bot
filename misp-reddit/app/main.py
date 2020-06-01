@@ -30,7 +30,7 @@ def not_authorized(e):
 
 
 @app.route('/reddit_account', methods=['POST'])
-#@slack_sig_auth
+@slack_sig_auth
 def reddit_account():
     text=request.form['text']
     response_url=request.form['response_url']
@@ -53,7 +53,7 @@ def reddit_account():
     return ('', 200)
 
 @app.route('/reddit_subreddit', methods=['POST'])
-#@slack_sig_auth
+@slack_sig_auth
 def subreddit():
     text = request.form['text']
     response_url = request.form['response_url']
@@ -75,7 +75,7 @@ def subreddit():
 
 
 @app.route('/reddit_post', methods=['POST'])
-#@slack_sig_auth
+@slack_sig_auth
 def reddit_post():
     text = request.form['text']
     response_url = request.form['response_url']
@@ -96,7 +96,7 @@ def reddit_post():
     return('', 200)
 
 @app.route('/reddit_comment', methods=['POST'])
-#@slack_sig_auth
+@slack_sig_auth
 def reddit_comment():
     text = request.form['text']
     response_url = request.form['response_url']
