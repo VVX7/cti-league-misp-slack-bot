@@ -1,5 +1,6 @@
 from pymisp.tools.abstractgenerator import AbstractMISPObjectGenerator
 
+
 class RedditAccount(AbstractMISPObjectGenerator):
     def __init__(self, parameters: dict, strict: bool = True, standalone: bool = True, **kwargs):
         super(RedditAccount, self).__init__('reddit-account', strict=strict, standalone=standalone, **kwargs)
@@ -7,23 +8,33 @@ class RedditAccount(AbstractMISPObjectGenerator):
         self.generate_attributes()
 
     def generate_attributes(self):
-        #Account avatar
+        # Account avatar URL
+        if self._parameters.get('account-avatar-url'):
+            if type(self._parameters.get('account-avatar-url')) is list:
+                for i in self._parameters.get('account-avatar-url'):
+                    self.add_attribute('account-avatar-url', value=i)
+            else:
+                self.add_attribute('account-avatar', value=self._parameters['account-avatar-url'])
+
+        # Account avatar
         if self._parameters.get('account-avatar'):
             if type(self._parameters.get('account-avatar')) is list:
                 for i in self._parameters.get('account-avatar'):
-                    self.add_attribute('account-avatar', value=i)
+                    self.add_attribute('account-avatar', value=i["filename"], data=i["data"])
             else:
-                self.add_attribute('account-avatar', value=self._parameters['account-avatar'])
+                self.add_attribute('account-avatar',
+                                   value=self._parameters.get('account-avatar')["filename"],
+                                   data=self._parameters.get('account-avatar')["data"])
 
         # Account ID
         if self._parameters.get('account-id'):
             self.add_attribute('account-id', value=self._parameters['account-id'])
 
-        #Account name
+        # Account name
         if self._parameters.get('account-name'):
             self.add_attribute('account-name', value=self._parameters['account-name'])
 
-        #Archive
+        # Archive
         if self._parameters.get('archive'):
             if type(self._parameters.get('archive')) is list:
                 for i in self._parameters.get('archive'):
@@ -31,23 +42,26 @@ class RedditAccount(AbstractMISPObjectGenerator):
             else:
                 self.add_attribute('archive', self._parameters['archive'])
 
-        #attachment
+        # attachment
         if self._parameters.get('attachment'):
             if type(self._parameters.get('attachment')) is list:
                 for i in self._parameters.get('attachment'):
-                    self.add_attribute('attachment', value=i)
+                    self.add_attribute('attachment',
+                                       value=i["filename"], data=i["data"])
             else:
-                self.add_attribute('attachment', self._parameters['attachment'])
+                self.add_attribute('attachment',
+                                   value=self._parameters.get('attachment')["filename"],
+                                   data=self._parameters.get('attachment')["data"])
 
-        #description
+        # description
         if self._parameters.get('description'):
             self.add_attribute('description', value=self._parameters['description'])
 
-        #link
+        # link
         if self._parameters.get('link'):
             self.add_attribute('link', value=self._parameters['link'])
 
-        #moderator-of
+        # moderator-of
         if self._parameters.get('moderator-of'):
             if type(self._parameters.get('moderator-of')) is list:
                 for i in self._parameters.get('moderator-of'):
@@ -55,7 +69,7 @@ class RedditAccount(AbstractMISPObjectGenerator):
             else:
                 self.add_attribute('moderator-of', self._parameters['moderator-of'])
 
-        #trophies
+        # trophies
         if self._parameters.get('trophies'):
             if type(self._parameters.get('trophies')) is list:
                 for i in self._parameters.get('trophies'):
@@ -63,17 +77,10 @@ class RedditAccount(AbstractMISPObjectGenerator):
             else:
                 self.add_attribute('trophies', self._parameters['trophies'])
 
-        #url
+        # url
         if self._parameters.get('url'):
             self.add_attribute('url', value=self._parameters['url'])
 
-        #user-avatar
-        if self._parameters.get('user-avatar'):
-            if type(self._parameters.get('user-avatar')) is list:
-                for i in self._parameters.get('user-avatar'):
-                    self.add_attribute('user-avatar', value=i)
-            else:
-                self.add_attribute('user-avatar', self._parameters['user-avatar'])
 
 class RedditComment(AbstractMISPObjectGenerator):
     def __init__(self, parameters: dict, strict: bool = True, standalone: bool = True, **kwargs):
@@ -82,7 +89,7 @@ class RedditComment(AbstractMISPObjectGenerator):
         self.generate_attributes()
 
     def generate_attributes(self):
-        #Archive
+        # Archive
         if self._parameters.get('archive'):
             if type(self._parameters.get('archive')) is list:
                 for i in self._parameters.get('archive'):
@@ -90,27 +97,29 @@ class RedditComment(AbstractMISPObjectGenerator):
             else:
                 self.add_attribute('archive', self._parameters['archive'])
 
-        #attachment
+        # attachment
         if self._parameters.get('attachment'):
             if type(self._parameters.get('attachment')) is list:
                 for i in self._parameters.get('attachment'):
-                    self.add_attribute('attachment', value=i)
+                    self.add_attribute('attachment', value=i["filename"], data=i["data"])
             else:
-                self.add_attribute('attachment', self._parameters['attachment'])
+                self.add_attribute('attachment',
+                                   value=self._parameters.get('attachment')["filename"],
+                                   data=self._parameters.get('attachment')["data"])
 
-        #comment
-        if self._parameters.get('comment'):
-            self.add_attribute('comment', value=self._parameters['comment'])
+        # author
+        if self._parameters.get('author'):
+            self.add_attribute('author', value=self._parameters['author'])
 
-        #creator
-        if self._parameters.get('creator'):
-            self.add_attribute('creator', value=self._parameters['creator'])
+        # body
+        if self._parameters.get('body'):
+            self.add_attribute('body', value=self._parameters['body'])
 
-        #description
+        # description
         if self._parameters.get('description'):
             self.add_attribute('description', value=self._parameters['description'])
 
-        #embedded-link
+        # embedded-link
         if self._parameters.get('embedded-link'):
             if type(self._parameters.get('embedded-link')) is list:
                 for i in self._parameters.get('embedded-link'):
@@ -118,7 +127,15 @@ class RedditComment(AbstractMISPObjectGenerator):
             else:
                 self.add_attribute('embedded-link', self._parameters['embedded-link'])
 
-        #hashtag
+        # embedded-safe-link
+        if self._parameters.get('embedded-safe-link'):
+            if type(self._parameters.get('embedded-safe-link')) is list:
+                for i in self._parameters.get('embedded-safe-link'):
+                    self.add_attribute('embedded-safe-link', value=i)
+            else:
+                self.add_attribute('embedded-safe-link', self._parameters['embedded-safe-link'])
+
+        # hashtag
         if self._parameters.get('hashtag'):
             if type(self._parameters.get('hashtag')) is list:
                 for i in self._parameters.get('hashtag'):
@@ -126,29 +143,26 @@ class RedditComment(AbstractMISPObjectGenerator):
             else:
                 self.add_attribute('hashtag', self._parameters['hashtag'])
 
-        #link
+        # link
         if self._parameters.get('link'):
             self.add_attribute('link', value=self._parameters['link'])
 
-        #subreddit-name
+        # link
         if self._parameters.get('subreddit-name'):
-            if type(self._parameters.get('subreddit-name')) is list:
-                for i in self._parameters.get('subreddit-name'):
-                    self.add_attribute('subreddit-name', value=i)
-            else:
-                self.add_attribute('subreddit-name', self._parameters['subreddit-name'])
+            self.add_attribute('subreddit-name', value=self._parameters['subreddit-name'])
 
-        #url
+        # url
         if self._parameters.get('url'):
             self.add_attribute('url', value=self._parameters['url'])
 
-        #username-quoted
+        # username-quoted
         if self._parameters.get('username-quoted'):
             if type(self._parameters.get('username-quoted')) is list:
                 for i in self._parameters.get('username-quoted'):
                     self.add_attribute('username-quoted', value=i)
             else:
                 self.add_attribute('username-quoted', self._parameters['username-quoted'])
+
 
 class RedditPost(AbstractMISPObjectGenerator):
     def __init__(self, parameters: dict, strict: bool = True, standalone: bool = True, **kwargs):
@@ -157,7 +171,7 @@ class RedditPost(AbstractMISPObjectGenerator):
         self.generate_attributes()
 
     def generate_attributes(self):
-        #Archive
+        # Archive
         if self._parameters.get('archive'):
             if type(self._parameters.get('archive')) is list:
                 for i in self._parameters.get('archive'):
@@ -165,27 +179,33 @@ class RedditPost(AbstractMISPObjectGenerator):
             else:
                 self.add_attribute('archive', self._parameters['archive'])
 
-        #attachment
+        # attachment
         if self._parameters.get('attachment'):
             if type(self._parameters.get('attachment')) is list:
                 for i in self._parameters.get('attachment'):
-                    self.add_attribute('attachment', value=i)
+                    self.add_attribute('attachment', value=i["filename"], data=i["data"])
             else:
-                self.add_attribute('attachment', self._parameters['attachment'])
+                self.add_attribute('attachment',
+                                   value=self._parameters.get('attachment')["filename"],
+                                   data=self._parameters.get('attachment')["data"])
 
-        #comment
+        # comment
         if self._parameters.get('comment'):
             self.add_attribute('comment', value=self._parameters['comment'])
 
-        #creator
-        if self._parameters.get('creator'):
-            self.add_attribute('creator', value=self._parameters['creator'])
+        # author
+        if self._parameters.get('author'):
+            self.add_attribute('author', value=self._parameters['author'])
 
-        #description
+        # description
         if self._parameters.get('description'):
             self.add_attribute('description', value=self._parameters['description'])
 
-        #embedded-link
+        # edited
+        if self._parameters.get('edited'):
+            self.add_attribute('edited', value=self._parameters['edited'])
+
+        # embedded-link
         if self._parameters.get('embedded-link'):
             if type(self._parameters.get('embedded-link')) is list:
                 for i in self._parameters.get('embedded-link'):
@@ -193,7 +213,7 @@ class RedditPost(AbstractMISPObjectGenerator):
             else:
                 self.add_attribute('embedded-link', self._parameters['embedded-link'])
 
-        #embedded-safe-link
+        # embedded-safe-link
         if self._parameters.get('embedded-safe-link'):
             if type(self._parameters.get('embedded-safe-link')) is list:
                 for i in self._parameters.get('embedded-safe-link'):
@@ -201,7 +221,7 @@ class RedditPost(AbstractMISPObjectGenerator):
             else:
                 self.add_attribute('embedded-safe-link', self._parameters['embedded-safe-link'])
 
-        #hashtag
+        # hashtag
         if self._parameters.get('hashtag'):
             if type(self._parameters.get('hashtag')) is list:
                 for i in self._parameters.get('hashtag'):
@@ -209,19 +229,19 @@ class RedditPost(AbstractMISPObjectGenerator):
             else:
                 self.add_attribute('hashtag', self._parameters['hashtag'])
 
-        #link
+        # link
         if self._parameters.get('link'):
             self.add_attribute('link', value=self._parameters['link'])
 
-        #post-content
+        # post-content
         if self._parameters.get('post-content'):
             self.add_attribute('post-content', value=self._parameters['post-content'])
 
-        #post-title
+        # post-title
         if self._parameters.get('post-title'):
             self.add_attribute('post-title', value=self._parameters['post-title'])
 
-        #subreddit-name
+        # subreddit-name
         if self._parameters.get('subreddit-name'):
             if type(self._parameters.get('subreddit-name')) is list:
                 for i in self._parameters.get('subreddit-name'):
@@ -229,11 +249,20 @@ class RedditPost(AbstractMISPObjectGenerator):
             else:
                 self.add_attribute('subreddit-name', self._parameters['subreddit-name'])
 
-        #url
+        # thumbnail
+        if self._parameters.get('thumbnail'):
+            self.add_attribute('thumbnail', value=self._parameters.get('thumbnail')["filename"],
+                               data=self._parameters.get('thumbnail')["data"])
+
+        # thumbnail-url
+        if self._parameters.get('thumbnail-url'):
+            self.add_attribute('thumbnail-url', value=self._parameters['thumbnail-url'])
+
+        # url
         if self._parameters.get('url'):
             self.add_attribute('url', value=self._parameters['url'])
 
-        #username-quoted
+        # username-quoted
         if self._parameters.get('username-quoted'):
             if type(self._parameters.get('username-quoted')) is list:
                 for i in self._parameters.get('username-quoted'):
@@ -241,14 +270,16 @@ class RedditPost(AbstractMISPObjectGenerator):
             else:
                 self.add_attribute('username-quoted', self._parameters['username-quoted'])
 
+
 class RedditSubReddit(AbstractMISPObjectGenerator):
+
     def __init__(self, parameters: dict, strict: bool = True, standalone: bool = True, **kwargs):
         super(RedditSubReddit, self).__init__('reddit-subreddit', strict=strict, standalone=standalone, **kwargs)
         self._parameters = parameters
         self.generate_attributes()
 
     def generate_attributes(self):
-        #Archive
+        # Archive
         if self._parameters.get('archive'):
             if type(self._parameters.get('archive')) is list:
                 for i in self._parameters.get('archive'):
@@ -256,31 +287,43 @@ class RedditSubReddit(AbstractMISPObjectGenerator):
             else:
                 self.add_attribute('archive', self._parameters['archive'])
 
-        #attachment
+        # attachment
         if self._parameters.get('attachment'):
             if type(self._parameters.get('attachment')) is list:
                 for i in self._parameters.get('attachment'):
-                    self.add_attribute('attachment', value=i)
+                    self.add_attribute('attachment', value=i["filename"], data=i["data"])
             else:
-                self.add_attribute('attachment', self._parameters['attachment'])
+                self.add_attribute('attachment',
+                                   value=self._parameters.get('attachment')["filename"],
+                                   data=self._parameters.get('attachment')["data"])
 
-        #community-icon
-        if self._parameters.get('community-icon'):
-            if type(self._parameters.get('community-icon')) is list:
-                for i in self._parameters.get('community-icon'):
-                    self.add_attribute('community-icon', value=i)
+        # banner-background-image
+        if self._parameters.get('banner-background-image'):
+            self.add_attribute('banner-background-image',
+                               value=self._parameters.get('banner-background-image')["filename"],
+                               data=self._parameters.get('banner-background-image')["data"])
+
+        # banner-background-url
+        if self._parameters.get('banner-background-url'):
+            if type(self._parameters.get('banner-background-url')) is list:
+                for i in self._parameters.get('banner-background-url'):
+                    self.add_attribute('banner-background-url', value=i)
             else:
-                self.add_attribute('community-icon', self._parameters['community-icon'])
+                self.add_attribute('banner-background-url', self._parameters['banner-background-url'])
 
-        #creator
+        # creator
         if self._parameters.get('creator'):
             self.add_attribute('creator', value=self._parameters['creator'])
 
-        #description
+        # description
         if self._parameters.get('description'):
             self.add_attribute('description', value=self._parameters['description'])
 
-        #embedded-link
+        # display-name
+        if self._parameters.get('display-name'):
+            self.add_attribute('display-name', value=self._parameters['display-name'])
+
+        # embedded-link
         if self._parameters.get('embedded-link'):
             if type(self._parameters.get('embedded-link')) is list:
                 for i in self._parameters.get('embedded-link'):
@@ -288,7 +331,7 @@ class RedditSubReddit(AbstractMISPObjectGenerator):
             else:
                 self.add_attribute('embedded-link', self._parameters['embedded-link'])
 
-        #embedded-safe-link
+        # embedded-safe-link
         if self._parameters.get('embedded-safe-link'):
             if type(self._parameters.get('embedded-safe-link')) is list:
                 for i in self._parameters.get('embedded-safe-link'):
@@ -296,7 +339,7 @@ class RedditSubReddit(AbstractMISPObjectGenerator):
             else:
                 self.add_attribute('embedded-safe-link', self._parameters['embedded-safe-link'])
 
-        #hashtag
+        # hashtag
         if self._parameters.get('hashtag'):
             if type(self._parameters.get('hashtag')) is list:
                 for i in self._parameters.get('hashtag'):
@@ -304,18 +347,20 @@ class RedditSubReddit(AbstractMISPObjectGenerator):
             else:
                 self.add_attribute('hashtag', self._parameters['hashtag'])
 
-        #header-image
-        if self._parameters.get('header-image'):
-            if type(self._parameters.get('header-image')) is list:
-                for i in self._parameters.get('header-image'):
-                    self.add_attribute('header-image', value=i)
-            else:
-                self.add_attribute('header-image', self._parameters['header-image'])
-        #link
+        # icon-img
+        if self._parameters.get('icon-img'):
+            self.add_attribute('icon-img', value=self._parameters.get('icon-img')["filename"],
+                               data=self._parameters.get('icon-img')["data"])
+
+        # icon-img-url
+        if self._parameters.get('icon-img'):
+            self.add_attribute('icon-img', value=self._parameters['icon-img'])
+
+        # link
         if self._parameters.get('link'):
             self.add_attribute('link', value=self._parameters['link'])
 
-        #moderator
+        # moderator
         if self._parameters.get('moderator'):
             if type(self._parameters.get('moderator')) is list:
                 for i in self._parameters.get('moderator'):
@@ -323,24 +368,25 @@ class RedditSubReddit(AbstractMISPObjectGenerator):
             else:
                 self.add_attribute('moderator', self._parameters['moderator'])
 
-        #privacy
+        # privacy
         privacy_allowed = ['Public', 'Private']
         if self._parameters.get('privacy'):
             if self._parameters['privacy'] in privacy_allowed:
                 self.add_attribute('privacy', value=self._parameters['privacy'])
 
-        #rules
+        # rules
         if self._parameters.get('rules'):
             if type(self._parameters.get('rules')) is list:
                 for i in self._parameters.get('rules'):
                     self.add_attribute('rules', value=i)
             else:
                 self.add_attribute('rules', self._parameters['rules'])
-        #submit-text
+
+        # submit-text
         if self._parameters.get('submit-text'):
             self.add_attribute('submit-text', value=self._parameters['submit-text'])
 
-        #subreddit-alias
+        # subreddit-alias
         if self._parameters.get('subreddit-alias'):
             if type(self._parameters.get('subreddit-alias')) is list:
                 for i in self._parameters.get('subreddit-alias'):
@@ -348,11 +394,7 @@ class RedditSubReddit(AbstractMISPObjectGenerator):
             else:
                 self.add_attribute('subreddit-alias', self._parameters['subreddit-alias'])
 
-        #subreddit-name
-        if self._parameters.get('subreddit-name'):
-            self.add_attribute('subreddit-name', value=self._parameters['subreddit-name'])
-
-        #subreddit-type
+        # subreddit-type
         if self._parameters.get('subreddit-type'):
             if type(self._parameters.get('subreddit-type')) is list:
                 for i in self._parameters.get('subreddit-type'):
@@ -360,6 +402,6 @@ class RedditSubReddit(AbstractMISPObjectGenerator):
             else:
                 self.add_attribute('subreddit-type', self._parameters['subreddit-type'])
 
-        #url
+        # url
         if self._parameters.get('url'):
             self.add_attribute('url', value=self._parameters['url'])
