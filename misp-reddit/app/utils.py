@@ -80,7 +80,7 @@ def valid_post(text):
     misp_event_id = text.split()[0]
     subreddit_url = text.split()[1]
 
-    p = re.compile('reddit.com/r/[^/]+/comments/([^/]+)'
+    p = re.compile('reddit.com/r/[^/]+/comments/([^/]+)')
     r = p.findall(subreddit_url)
 
     try:
