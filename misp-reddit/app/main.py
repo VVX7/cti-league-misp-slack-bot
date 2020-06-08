@@ -89,9 +89,9 @@ def reddit_post():
         reddit_post_id = text.split(' ')[1]
 
         data = {
-            'misp_event_id' : misp_event_id,
-            'reddit_post_id' : reddit_post_id,
-            'response_url' : response_url
+            'misp_event_id': misp_event_id,
+            'reddit_post_id': reddit_post_id,
+            'response_url': response_url
         }
 
         q.enqueue(process_reddit_post, data)

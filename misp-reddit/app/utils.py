@@ -80,7 +80,7 @@ def valid_post(text):
     misp_event_id = text.split()[0]
     subreddit_url = text.split()[1]
 
-    p = re.compile('reddit.com/r/[^/]+/comments/([^/]+)')
+    p = re.compile('reddit.com/r/([^/]+)/comments/[^/]+')
     r = p.findall(subreddit_url)
 
     try:
@@ -200,14 +200,14 @@ def return_reddit_comment(text):
     return response
 
 
-def return_subreddit(reddit_post_id):
+def return_subreddit(text):
     """
     Get a Reddit post ID from a URL.
     :param status_id:
     :return:
     """
     p = re.compile('reddit.com/r/([^/]+)')
-    r = p.findall(reddit_post_id)
+    r = p.findall(text)
 
     if len(r) > 0:
         try:
@@ -216,7 +216,7 @@ def return_subreddit(reddit_post_id):
             return e
     else:
         try:
-            response = reddit.subreddit(reddit_post_id)
+            response = reddit.subreddit(text)
         except Exception as e:
             return e
     return response
@@ -463,7 +463,7 @@ def process_reddit_comment(data):
         requests.post(response_url, json=response)
     except:
         traceback.print_exc(file=sys.stdout)
-        resp = build_resonse(f'Reddit comment {reddit_comment_id} not found')
+        resp = build_response(f'Reddit comment {reddit_comment_id} not found')
         requests.post(response_url, json=resp)
 
 
