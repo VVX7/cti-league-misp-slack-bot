@@ -7,16 +7,16 @@ import time
 import logging
 import sys
 
-root = logging.getLogger()
-root.setLevel(logging.DEBUG)
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
 
 handler = logging.StreamHandler(sys.stdout)
 handler.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 handler.setFormatter(formatter)
-root.addHandler(handler)
+logger.addHandler(handler)
 
-slack = slack.WebClient(token=os.environ['SLACK_API_TOKEN'])
+# slack = slack.WebClient(token=os.environ['SLACK_API_TOKEN'])
 
 IA_KEY = os.environ['IA_KEY']
 IA_SECRET = os.environ['IA_SECRET']
@@ -48,7 +48,9 @@ class WayBack:
         status = r.json()
         print(status)
         while status["status"] != "success":
+            logger.info(status)
             if status["status"] == "error":
+                logger.info(status)
                 return r.json()
             time.sleep(10)
             r = requests.get(f"https://web.archive.org/save/status/{job_id}", headers=self.headers)

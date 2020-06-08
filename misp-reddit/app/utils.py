@@ -14,7 +14,16 @@ import base64
 from urllib.parse import urlparse
 import datetime
 import logging
+import sys
 
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
+
+handler = logging.StreamHandler(sys.stdout)
+handler.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
 logger = logging.getLogger('log')
 
 # slack = slack.WebClient(token=os.environ['SLACK_API_TOKEN'])
@@ -299,7 +308,7 @@ def process_reddit_post(data):
 
         requests.post(response_url, json=response)
     except:
-        traceback.print_exc(file=sys.stdout)
+        logger.info(traceback.print_exc(file=sys.stdout))
         resp = build_response(f'Reddit post {reddit_post_id} not found')
         requests.post(url=response_url, json=resp)
 
@@ -379,7 +388,7 @@ def process_reddit_subreddit(data):
 
         requests.post(response_url, json=response)
     except:
-        traceback.print_exc(file=sys.stdout)
+        logger.info(traceback.print_exc(file=sys.stdout))
         resp = build_response(f'Reddit subreddit {reddit_subreddit} not found')
         requests.post(url=response_url, json=resp)
 
@@ -462,7 +471,7 @@ def process_reddit_comment(data):
 
         requests.post(response_url, json=response)
     except:
-        traceback.print_exc(file=sys.stdout)
+        logger.info(traceback.print_exc(file=sys.stdout))
         resp = build_response(f'Reddit comment {reddit_comment_id} not found')
         requests.post(response_url, json=resp)
 
@@ -546,7 +555,7 @@ def process_reddit_account(data):
 
         requests.post(response_url, json=response)
     except:
-        traceback.print_exc(file=sys.stdout)
+        logger.info(traceback.print_exc(file=sys.stdout))
         resp = build_response(f'Reddit user {reddit_account} not found')
         requests.post(url=response_url, json=resp)
 
