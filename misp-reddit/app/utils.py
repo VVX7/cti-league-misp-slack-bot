@@ -50,7 +50,7 @@ def valid_reddit_account(text):
     except IndexError:
         return False
 
-    p = re.compile('[A-Za-z0-9_-]+')
+    p = re.compile('(?:u/)?([\w]+)')
     m = p.match(reddit_user)
 
     try:
@@ -109,7 +109,7 @@ def valid_comment(text):
     misp_event_id = text.split()[0]
     subreddit_url = text.split()[1]
 
-    p = re.compile('reddit.com/r/[^/]+/comments/[^/]+/([^/]+)')
+    p = re.compile('reddit.com/r/[^/]+/comments/[^/]+/[^/]+/([^/]+)')
     r = p.findall(subreddit_url)
 
     try:
@@ -171,7 +171,7 @@ def return_reddit_account(text):
     :param status_id:
     :return:
     """
-    p = re.compile('reddit.com/r/[^/]+/comments/([^/]+)')
+    p = re.compile('(?:u/)?([\w]+)')
     r = p.findall(text)
 
     if len(r) > 0:
@@ -193,7 +193,7 @@ def return_reddit_comment(text):
     :param status_id:
     :return:
     """
-    p = re.compile('reddit.com/r/[^/]+/comments/[^/]+/([^/]+)')
+    p = re.compile('reddit.com/r/[^/]+/comments/[^/]+/[^/]+/([^/]+)')
     r = p.findall(text)
 
     if len(r) > 0:
@@ -569,25 +569,31 @@ def transform_reddit_account(redditor):
     data['trophies'] = []
     data['user-avatar'] = []
 
-    data['account-avatar'] = redditor.subreddit['banner_img']
+    # Add the banner background.
+    avatar_filename = return_file_name(redditor.icon_img)
+    avatar = return_b64_attachement(redditor.icon_img)
+    if avatar_filename and avatar:
+        data['account-avatar'] = {"filename": avatar_filename, "data": avatar}
+    data['account-avatar-url'] = redditor.icon_img
+
     data['account-id'] = redditor.id
     data['account-name'] = redditor.name
     description = f'ID {redditor.id} Name {redditor.name}'
     data['description'] = description
+    data['first_seen'] = redditor.created
+
     subreddits = []
     for subreddit in redditor.moderated():
-        subreddits.append(subreddit.display_name)
+         subreddits.append(subreddit.display_name)
     data['moderator-of'] = subreddits
 
     trophies = []
     for trophy in redditor.trophies():
-        trophies.append(trophy.name)
+         trophies.append(trophy.name)
 
     data['trophies'] = trophies
     data['link'] = f'https://reddit.com/user/{redditor.name}/'
     data['url'] = data['link']
-
-    data['user-avatar'] = redditor.icon_img
 
     return data
 
@@ -598,13 +604,16 @@ def transform_reddit_comment(comment):
     data['attachment'] = []
 
     data['comment'] = comment.body
-    data['creator'] = comment.author.name
 
-    description = f'Created {comment.created_utc} distinguished: {comment.distinguished} parent_id: {comment.parent_id}'
+    if comment.author:
+        data['creator'] = comment.author.name
+
+    description = f'Created {return_iso_timestamp(comment.created_utc)} distinguished: {comment.distinguished} parent_id: {comment.parent_id}'
     description += f' score: {comment.score} stickied: {comment.stickied} edited: {comment.edited}'
 
     data['description'] = description
     data['embedded-link'] = return_embedded_links(comment.body)
+    data['first_seen'] = comment.created
     data['hashtag'] = return_hashtags(comment.body)
     link = f'https://reddit.com/{comment.permalink}'
     data['link'] = link
@@ -624,13 +633,14 @@ def transform_reddit_post(post):
         try:
             name = return_file_name(i["source"]["url"])
             attachment = return_b64_attachement(i["source"]["url"])
-            data['attachment'].append((name, attachment))
+            data['attachment'].append({"filename": name, "data": attachment})
         except KeyError:
             pass
 
-    data['author'] = post.author.name
+    if post.author:
+        data['author'] = post.author.name
 
-    description = f'Created {post.created_utc} distinguished: {post.distinguished} locked: {post.locked}'
+    description = f'Created {return_iso_timestamp(post.created_utc)} distinguished: {post.distinguished} locked: {post.locked}'
     description += f' Comments: {post.num_comments} Score: {post.score} Stickied: {post.stickied} Upvote ratio: {post.upvote_ratio}'
     data['description'] = description
 
@@ -695,7 +705,7 @@ def transform_reddit_subreddit(subreddit):
     data['display-name'] = subreddit.display_name
 
     # Add hastags.
-    # data['hashtag'] = return_hashtags(subreddit.description)
+    data['hashtag'] = return_hashtags(subreddit.description)
 
     # Add subreddit description.
     data['header-title'] = subreddit.header_title
@@ -733,22 +743,14 @@ def transform_reddit_subreddit(subreddit):
 
 
 def return_embedded_links(comment):
-    p = re.compile('\[.*\]\((.*)\)')
+    p = re.compile('\[.*\]\(([^#]+)(?:#[\w]+)?\)')
     r = p.findall(comment)
     return r
 
 
 def return_hashtags(comment):
-    p = re.compile('#(\w+)')
+    p = re.compile('(?<![/\w+])#(\w+)')
     r = p.findall(comment)
-    return r
-
-
-def return_subreddit(permalink):
-    p = re.compile('/r/[^/]+/')
-    r = p.findall(permalink)[0]
-    r = r.replace('/r/', '')
-    r = r.replace('/', '')
     return r
 
 

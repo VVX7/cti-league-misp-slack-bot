@@ -39,8 +39,8 @@ def reddit_account():
         misp_event_id = text.split(" ")[0]
         reddit_account = text.split(" ")[1]
         data = {
-            'misp_event_id' : misp_event_id,
-            'reddit_account' : reddit_account,
+            'misp_event_id': misp_event_id,
+            'reddit_account': reddit_account,
             'response_url': response_url
         }
         q.enqueue(process_reddit_account, data)
