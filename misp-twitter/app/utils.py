@@ -159,6 +159,12 @@ def return_file_name(url):
     except:
         return None
 
+def return_banner_name(url):
+    try:
+        file_name = url.split("/")[-1]
+        return file_name
+    except:
+        return None
 
 def return_b64_attachement(url):
     try:
@@ -320,7 +326,6 @@ def transform_twitter_account(response):
     data = {}
     data["embedded-link"] = []
     data["hashtag"] = []
-    data["profile-banner"] = []
     data["profile_image"] = []
 
     # Bio
@@ -417,9 +422,9 @@ def transform_twitter_account(response):
 
     # Add images in Tweet
     try:
-        banner_name = return_file_name(response["profile_banner_url"])
+        banner_name = return_banner_name(response["profile_banner_url"])
         banner_attachment = return_b64_attachement(response["profile_banner_url"])
-        data['profile-banner'].append({"filename": banner_name, "data": banner_attachment})
+        data['profile-banner'] = {"filename": banner_name, "data": banner_attachment}
     except KeyError:
         pass
 
