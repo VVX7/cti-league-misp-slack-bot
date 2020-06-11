@@ -213,7 +213,8 @@ def transform_twitter_post(response):
             name = return_file_name(i["media_url"])
             attachment = return_b64_attachement(i["media_url"])
             data['attachment'].append({"filename": name, "data": attachment})
-    except KeyError:
+    except Exception as e:
+        logger.exception(e)
         pass
 
     # Add embedded URL links(s).
@@ -432,9 +433,12 @@ def transform_twitter_account(response):
     # Add images in Tweet
     try:
         banner_name = return_banner_name(response["profile_banner_url"])
+        logger.info(f"Banner name: {banner_name}")
         banner_attachment = return_b64_attachement(response["profile_banner_url"])
+        logger.info(f"Banner attachement: {banner_attachment}")
         data['profile-banner'] = {"filename": banner_name, "data": banner_attachment}
-    except KeyError:
+    except Exception as e:
+        logger.exception(e)
         pass
 
     # location
@@ -446,9 +450,12 @@ def transform_twitter_account(response):
     # Add images in Tweet
     try:
         avatar_name = return_file_name(response["profile_image_url_https"])
+        logger.info(f"Banner name: {avatar_name}")
         avatar_attachment = return_b64_attachement(response["profile_image_url_https"])
+        logger.info(f"Banner name: {avatar_attachment}")
         data['profile-image'].append({"filename": avatar_name, "data": avatar_attachment})
-    except KeyError:
+    except Exception as e:
+        logger.exception(e)
         pass
 
     # location

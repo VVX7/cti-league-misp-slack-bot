@@ -272,15 +272,15 @@ class TwitterAccountObject(AbstractMISPObjectGenerator):
             self.add_attribute('profile-banner-url', value=self._parameters['profile-banner-url'])
 
         # attachment
-        if self._parameters.get('profile_image'):
-            if type(self._parameters.get('profile_image')) is list:
-                for i in self._parameters.get('profile_image'):
-                    self.add_attribute('profile_image',
+        if self._parameters.get('profile-image'):
+            if type(self._parameters.get('profile-image')) is list:
+                for i in self._parameters.get('profile-image'):
+                    self.add_attribute('profile-image',
                                        value=i["filename"], data=i["data"])
             else:
-                self.add_attribute('profile_image',
-                                   value=self._parameters.get('profile_image')["filename"],
-                                   data=self._parameters.get('profile_image')["data"])
+                self.add_attribute('profile-image',
+                                   value=self._parameters.get('profile-image')["filename"],
+                                   data=self._parameters.get('profile-image')["data"])
 
         # link to avatar
         if self._parameters.get('profile-image-url'):
