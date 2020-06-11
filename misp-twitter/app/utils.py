@@ -607,7 +607,7 @@ def twitter_account(data):
         status = twitter_get_account(twitter_post_id)
 
         # Extract relevant values from the Twitter status.
-        microblog_data = transform_twitter_post(status._json)
+        microblog_data = transform_twitter_account(status._json)
 
         # Load the microblog version from it's definition.json file.
         with open("misp-objects/twitter-account/definition.json") as f:
