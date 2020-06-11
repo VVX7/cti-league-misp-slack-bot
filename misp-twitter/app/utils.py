@@ -194,7 +194,7 @@ def transform_twitter_post(response):
 
     # Add images in Tweet
     try:
-        for i in response["entities"]["media"]:
+        for i in response["extended_entities"]["media"]:
             name = return_file_name(i["media_url"])
             attachment = return_b64_attachement(i["media_url"])
             data['attachment'].append({"filename": name, "data": attachment})
