@@ -118,14 +118,14 @@
       "misp-attribute": "url",
       "ui-priority": 1
     },
-    "profile-image-url": {
-      "description": "A link to the user's avatar.",
-      "misp-attribute": "url",
-      "ui-priority": 1
-    },
     "profile-image": {
       "description": "A screenshot or exported user avatar.",
       "misp-attribute": "attachment",
+      "ui-priority": 1
+    },
+    "profile-image-url": {
+      "description": "A link to the user's avatar.",
+      "misp-attribute": "url",
       "ui-priority": 1
     },
     "tweets": {
