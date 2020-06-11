@@ -433,7 +433,13 @@ def transform_twitter_account(response):
     try:
         avatar_name = return_file_name(response["profile_image_url_https"])
         avatar_attachment = return_b64_attachement(response["profile_image_url_https"])
-        data['profile_image'].append({"filename": avatar_name, "data": avatar_attachment})
+        data['profile-image'].append({"filename": avatar_name, "data": avatar_attachment})
+    except KeyError:
+        pass
+
+    # location
+    try:
+        data["profile-image-url"] = response["profile_image_url_https"]
     except KeyError:
         pass
 
