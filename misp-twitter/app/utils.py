@@ -12,7 +12,16 @@ from urllib.parse import urlparse
 import datetime
 
 import logging
+import sys
 
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
+
+handler = logging.StreamHandler(sys.stdout)
+handler.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
 logger = logging.getLogger('log')
 
 slack = slack.WebClient(token=os.environ['SLACK_API_TOKEN'])
@@ -326,7 +335,7 @@ def transform_twitter_account(response):
     data = {}
     data["embedded-link"] = []
     data["hashtag"] = []
-    data["profile_image"] = []
+    data["profile-image"] = []
 
     # Bio
     try:
