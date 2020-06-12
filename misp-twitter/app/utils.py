@@ -278,7 +278,7 @@ def transform_twitter_post(response):
 
     # Add user display namme.
     try:
-        data["name"] = response["user"]["name"]
+        data["name"] = escape_unicode(response["user"]["name"])
     except KeyError:
         pass
 
@@ -296,7 +296,7 @@ def transform_twitter_post(response):
 
     # Add the Twitter post content.
     try:
-        data["post"] = response["full_text"]
+        data["post"] = escape_unicode(response["full_text"])
     except KeyError:
         pass
 
@@ -342,13 +342,13 @@ def transform_twitter_account(response):
 
     # Bio
     try:
-        data["bio"] = response["description"]
+        data["bio"] = escape_unicode(response["description"]
     except KeyError:
         pass
 
     # display name
     try:
-        data["displayed-name"] = response["name"]
+        data["displayed-name"] = escape_unicode(response["name"])
     except KeyError:
         pass
 
@@ -419,7 +419,7 @@ def transform_twitter_account(response):
 
     # name
     try:
-        data["name"] = response["name"]
+        data["name"] = escape_unicode(response["name"])
     except KeyError:
         pass
 
