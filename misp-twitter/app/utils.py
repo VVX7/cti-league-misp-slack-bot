@@ -10,7 +10,7 @@ import slack
 import base64
 from urllib.parse import urlparse
 import datetime
-
+import traceback
 import logging
 import sys
 
@@ -206,6 +206,8 @@ def transform_twitter_post(response):
     data["hashtag"] = []
     data["embedded-link"] = []
     data["username-quoted"] = []
+
+    # data['first_seen'] = return_iso_timestamp(response.created_at)
 
     # Add images in Tweet
     try:
@@ -570,22 +572,16 @@ def twitter_post(data):
         })
 
         twitter_message = ""
-        if microblog_data.get('username'):
-            twitter_message += 'Username: {}\n'.format(microblog_data['username'])
-        if microblog_data.get('display-name'):
-            twitter_message += 'Display Name: {}\n'.format(microblog_data['display-name'])
+        if microblog_data.get('name'):
+            twitter_message += 'Username: {}\n'.format(microblog_data['name'])
         if microblog_data.get('verified'):
             twitter_message += 'Verified Account: {}\n'.format(microblog_data['verified'])
-        if microblog_data.get('post'):
-            twitter_message += 'Status: {}\n'.format(microblog_data['post'])
         if microblog_data.get('in-reply-to-user-id'):
             twitter_message += 'In-Reply-To User ID: {}\n'.format(microblog_data['in-reply-to-user-id'])
         if microblog_data.get('in-reply-to-status-id'):
             twitter_message += 'In-Reply-To Status ID: {}\n'.format(microblog_data['in-reply-to-status-id'])
         if microblog_data.get('in-reply-to-display-name'):
             twitter_message += 'In-Reply-To Display Name: {}\n'.format(microblog_data['in-reply-to-display-name'])
-        if microblog_data.get('language'):
-            twitter_message += 'Language: {}\n'.format(microblog_data['language'])
 
         if len(microblog_data['hashtag']) > 0:
             twitter_message += 'Hashtags:\n'
@@ -613,7 +609,7 @@ def twitter_post(data):
 
         requests.post(response_url, json=response)
     except Exception:
-        logger.exception("twitter_microblog exception:")
+        logger.info(traceback.print_exc(file=sys.stdout))
         message = "An error has occurred!"
         resp = build_response(message, False)
         requests.post(response_url, json=resp)
@@ -723,7 +719,7 @@ def twitter_account(data):
 
         requests.post(response_url, json=response)
     except Exception:
-        logger.exception("twitter-account exception:")
+        logger.info(traceback.print_exc(file=sys.stdout))
         message = "An error has occurred!"
         resp = build_response(message, False)
         requests.post(response_url, json=resp)
