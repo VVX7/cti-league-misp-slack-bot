@@ -342,7 +342,7 @@ def transform_twitter_account(response):
 
     # Bio
     try:
-        data["bio"] = escape_unicode(response["description"]
+        data["bio"] = escape_unicode(response["description"])
     except KeyError:
         pass
 
